@@ -1,4 +1,12 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
+import { PollsService } from './polls.service';
 
 @Controller('polls')
-export class PollsController {}
+export class PollsController {
+  constructor(private readonly pollsService: PollsService) {}
+
+  @Get()
+  getAll() {
+    return this.pollsService.findAll();
+  }
+}
