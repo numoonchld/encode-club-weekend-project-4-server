@@ -15,4 +15,16 @@ export class AppController {
   getTokenContractAddress(): string {
     return this.appService.getTokenContractAddress();
   }
+
+  // get total token supply
+  @Get('token-total-supply')
+  getTotalSupply() {
+    return this.appService.getTotalSupply();
+  }
+
+  // register voters for token (mint voting tokens)
+
+  // process mint request from voters
+
+  // get list of all votes
 }
