@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { CreatePollDto } from './dto/create-poll.dto';
 import { PollsService } from './polls.service';
-import { ethers } from 'ethers';
+import isValidAddress from '../helpers/isValidAddress';
 
 @Controller('polls')
 export class PollsController {
@@ -20,7 +20,7 @@ export class PollsController {
 
   @Post('new-poll')
   createNewPoll(@Body() body: CreatePollDto) {
-    if (!ethers.utils.isAddress(body.creator)) throw new BadRequestException();
+    if (!isValidAddress(body.creator)) throw new BadRequestException();
     return this.pollsService.create(body);
   }
 
