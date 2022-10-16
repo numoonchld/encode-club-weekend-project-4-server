@@ -1,5 +1,6 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param, BadRequestException } from '@nestjs/common';
 import { AppService } from './app.service';
+import isValidAddress from './helpers/isValidAddress';
 
 @Controller()
 export class AppController {
@@ -20,6 +21,13 @@ export class AppController {
   @Get('token-total-supply')
   getTotalSupply() {
     return this.appService.getTotalSupply();
+  }
+
+  // get token-balance of address
+  @Get('token-balance/:accountAddress')
+  getAccountTokenBalance(@Param('accountAddress') accountAddress: string) {
+    if (!isValidAddress(accountAddress)) throw new BadRequestException();
+    return this.appService.getAccountTokenBalance(accountAddress);
   }
 
   // register voters for token (mint voting tokens)

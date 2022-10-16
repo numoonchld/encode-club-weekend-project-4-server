@@ -33,4 +33,10 @@ export class AppService {
     const totalSupply = ethers.utils.formatEther(totalSupplyBN);
     return { result: totalSupply };
   }
+
+  async getAccountTokenBalance(accountAddress: string) {
+    const tokenBalanceBN = await this.contract.balanceOf(accountAddress);
+    const tokenBalance = ethers.utils.formatEther(tokenBalanceBN);
+    return { result: tokenBalance };
+  }
 }
