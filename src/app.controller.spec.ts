@@ -16,8 +16,10 @@ describe('AppController', () => {
   });
 
   describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Hello World!');
+    it('should show landing text"', () => {
+      expect(appController.getHello()).toBe(
+        'Tokenized Ballot dApp API Backend',
+      );
     });
   });
 

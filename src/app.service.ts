@@ -4,7 +4,7 @@ import * as tokenContractAddressJSON from '../src/contract-assets/token-contract
 @Injectable()
 export class AppService {
   getHello(): string {
-    return 'Hello World!';
+    return 'Tokenized Ballot dApp API Backend';
   }
 
   getTokenContractAddress() {
