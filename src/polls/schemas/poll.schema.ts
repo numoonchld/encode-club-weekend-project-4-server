@@ -1,8 +1,21 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { Wallet } from 'ethers';
 
 export type PollDocument = Poll & Document;
+
+// schemaType limitations: https://mongoosejs.com/docs/guide.html#definition
+
+class Deployment {
+  address: string;
+  hash: string;
+  admin: string;
+}
+
+class Vote {
+  voter: string;
+  proposalChoiceSelected: number;
+  hash: string;
+}
 
 @Schema()
 export class Poll {
@@ -13,27 +26,19 @@ export class Poll {
   proposals: string[];
 
   @Prop({ required: true })
-  creator: Wallet;
+  creator: string;
 
   @Prop()
-  voters: Wallet[];
+  voters: string[];
 
   @Prop()
   isDeployed: boolean;
 
   @Prop()
-  deployment: {
-    address: string;
-    hash: string;
-    admin: Wallet;
-  };
+  deployment: Deployment;
 
   @Prop()
-  votes: {
-    voter: Wallet;
-    proposalChoiceSelected: number;
-    hash: string;
-  };
+  votes: Vote[];
 }
 
 export const PollSchema = SchemaFactory.createForClass(Poll);
