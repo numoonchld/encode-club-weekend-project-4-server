@@ -35,7 +35,7 @@ export default async (
       .connect(signer)
       .mint(mintToAddress, G11TokenJSON['TOKEN_PER_MINT_TIME_PERIOD']);
 
-    mintingTxn.wait();
+    await mintingTxn.wait();
 
     return true;
   } catch (error) {
