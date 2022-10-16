@@ -29,9 +29,6 @@ export class Poll {
   creator: string;
 
   @Prop()
-  voters: string[];
-
-  @Prop()
   isDeployed: boolean;
 
   @Prop()
