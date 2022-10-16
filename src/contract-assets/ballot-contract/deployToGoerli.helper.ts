@@ -18,9 +18,7 @@ export class DeployDetails {
   hash: string;
 }
 
-export default async (
-  ballotOptions: string[],
-): Promise<Boolean | DeployDetails> => {
+export default async (ballotOptions: string[]): Promise<DeployDetails> => {
   try {
     // setup provider
     const provider = new providers.AlchemyProvider(
@@ -36,15 +34,12 @@ export default async (
     // verify balance for deployment
     const balanceBN = await signer.getBalance();
     const balance = Number(utils.formatEther(balanceBN));
-    console.log('Balance details: ', balanceBN, balance);
 
     // check balance of deployer account
     if (balance < 0.01)
       throw new InternalServerErrorException(
         'Not enough balance available to deploy poll contract - try again later!',
       );
-
-    console.log('...attempting contract factory creation...');
 
     // create contract factory for poll contract deployment
     const pollContractFactory = new ContractFactory(
@@ -59,6 +54,8 @@ export default async (
     const votingTokenContractAddress =
       tokenContractAddressJSON['token-goerli-address'];
 
+    console.log({ votingTokenContractAddress });
+
     // get voting token contract block number
     const votingTokenContractBlockNumber =
       tokenContractAddressJSON['token-goerli-block-height'];
@@ -67,6 +64,12 @@ export default async (
     const contractFriendlyBallotOptions = ballotOptions.map((string) =>
       utils.formatBytes32String(string),
     );
+
+    console.log({
+      contractFriendlyBallotOptions,
+      votingTokenContractAddress,
+      votingTokenContractBlockNumber,
+    });
 
     // deploy poll contract with necessary parameters
     const pollContract = await pollContractFactory.deploy(

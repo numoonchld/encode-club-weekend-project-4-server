@@ -26,7 +26,7 @@ export class PollsService {
 
   async deployPoll(pollID: string) {
     // get DB entry of selected poll
-    const matchedPoll: any = this.pollModel.findById(pollID).exec();
+    const matchedPoll: any = await this.pollModel.findById(pollID).exec();
 
     // check if poll already deployed
     if (matchedPoll.isDeployed)
@@ -36,20 +36,17 @@ export class PollsService {
 
     // extract poll details for contract deployment
     const pollOptions = matchedPoll.proposals;
+    console.log({ pollOptions });
 
     // deploy with helper function
-    const deployDetails = await deployToGoerli(pollOptions);
+    const deployDetails: DeployDetails = await deployToGoerli(pollOptions);
 
-    if (deployDetails instanceof DeployDetails) {
-      matchedPoll.isDeployed = deployDetails.success;
-      matchedPoll.deploymentHash = deployDetails.hash;
-      matchedPoll.deploymentAddress = deployDetails.address;
+    matchedPoll.isDeployed = deployDetails.success;
+    matchedPoll.deploymentHash = deployDetails.hash;
+    matchedPoll.deploymentAddress = deployDetails.address;
 
-      await matchedPoll.save();
+    const saveMatchedPoll = await matchedPoll.save();
 
-      return { result: true };
-    }
-
-    return { result: false };
+    return { result: true, saveMatchedPoll };
   }
 }
