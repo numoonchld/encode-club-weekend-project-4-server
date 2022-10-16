@@ -17,10 +17,13 @@ export class Poll {
   creator: string;
 
   @Prop()
-  isDeployed: boolean;
+  isDeployed: Boolean;
 
   @Prop()
   deploymentHash: string;
+
+  @Prop()
+  deploymentAddress: string;
 }
 
 export const PollSchema = SchemaFactory.createForClass(Poll);

@@ -6,6 +6,7 @@ import {
   Param,
   BadRequestException,
 } from '@nestjs/common';
+import { DeployPollDto } from './dto/deploy-poll-dto';
 import { CreatePollDto } from './dto/create-poll.dto';
 import { PollsService } from './polls.service';
 import isValidAddress from '../helpers/isValidAddress';
@@ -27,9 +28,8 @@ export class PollsController {
   }
 
   // deploy poll ballot contract
-  @Post('deploy-poll-contract/:poll-id')
-  deployPollContract(@Param('poll-id') pollID: string) {
-    const isDeploySuccess = this.pollsService.deployPoll(pollID);
-    return { result: isDeploySuccess };
+  @Post('deploy-poll-contract')
+  deployPollContract(@Body() body: DeployPollDto) {
+    return this.pollsService.deployPoll(body.pollID);
   }
 }

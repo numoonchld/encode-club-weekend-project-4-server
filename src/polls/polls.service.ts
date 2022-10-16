@@ -1,16 +1,15 @@
 import { Model } from 'mongoose';
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Poll, PollDocument } from './schemas/poll.schema';
 import { CreatePollDto } from './dto/create-poll.dto';
-
-type PollTypeLocal = {
-  question: string;
-  proposals: string[];
-  creator: string;
-  isDeployed: boolean;
-  deploymentHash: string;
-};
+import deployToGoerli, {
+  DeployDetails,
+} from '../contract-assets/ballot-contract/deployToGoerli.helper';
 
 @Injectable()
 export class PollsService {
@@ -25,15 +24,32 @@ export class PollsService {
     return this.pollModel.find().exec();
   }
 
-  async deployPoll(pollID: string): Promise<Boolean> {
-    this.pollModel.findById(
-      pollID,
-      async (error: Error, poll: PollTypeLocal) => {
-        if (error)
-          throw new InternalServerErrorException('Error finding Poll in DB!');
-      },
-    );
+  async deployPoll(pollID: string) {
+    // get DB entry of selected poll
+    const matchedPoll: any = this.pollModel.findById(pollID).exec();
 
-    return true;
+    // check if poll already deployed
+    if (matchedPoll.isDeployed)
+      throw new BadRequestException(
+        `Poll already deployed (Goerli testnet contract address: ${matchedPoll.deploymentAddress} )`,
+      );
+
+    // extract poll details for contract deployment
+    const pollOptions = matchedPoll.proposals;
+
+    // deploy with helper function
+    const deployDetails = await deployToGoerli(pollOptions);
+
+    if (deployDetails instanceof DeployDetails) {
+      matchedPoll.isDeployed = deployDetails.success;
+      matchedPoll.deploymentHash = deployDetails.hash;
+      matchedPoll.deploymentAddress = deployDetails.address;
+
+      await matchedPoll.save();
+
+      return { result: true };
+    }
+
+    return { result: false };
   }
 }
