@@ -11,12 +11,6 @@ class Deployment {
   admin: string;
 }
 
-class Vote {
-  voter: string;
-  proposalChoiceSelected: number;
-  hash: string;
-}
-
 @Schema()
 export class Poll {
   @Prop({ required: true })
@@ -33,9 +27,6 @@ export class Poll {
 
   @Prop()
   deployment: Deployment;
-
-  @Prop()
-  votes: Vote[];
 }
 
 export const PollSchema = SchemaFactory.createForClass(Poll);
