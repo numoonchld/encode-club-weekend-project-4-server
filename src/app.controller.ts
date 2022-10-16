@@ -9,4 +9,10 @@ export class AppController {
   getHello(): string {
     return this.appService.getHello();
   }
+
+  // get token contract address
+  @Get()
+  getTokenContractAddress(): string {
+    return this.appService.getTokenContractAddress();
+  }
 }
