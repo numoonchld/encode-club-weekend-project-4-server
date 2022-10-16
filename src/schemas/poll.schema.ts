@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { Signer } from 'ethers';
+import { Wallet } from 'ethers';
 
 export type PollDocument = Poll & Document;
 
@@ -13,10 +13,10 @@ export class Poll {
   proposals: string[];
 
   @Prop()
-  creator: Signer;
+  creator: Wallet;
 
   @Prop()
-  voters: Signer[];
+  voters: Wallet[];
 
   @Prop()
   isDeployed: boolean;
@@ -25,12 +25,13 @@ export class Poll {
   deployment: {
     address: string;
     hash: string;
+    admin: Wallet;
   };
 
   @Prop()
   votes: {
-    voter: Signer;
-    proposlaChoiceSelected: number;
+    voter: Wallet;
+    proposalChoiceSelected: number;
     hash: string;
   };
 }
