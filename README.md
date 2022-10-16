@@ -16,3 +16,12 @@ cd encode-club-weekend-project-4-server
 # serve project in dev mode 
 npm run start:dev
 ```
+
+## Resources
+
+- https://docs.nestjs.com/techniques/mongodb#mongo
+- https://docs.nestjs.com/modules
+- https://docs.nestjs.com/controllers#controllers
+- https://docs.nestjs.com/providers#providers
+
+
