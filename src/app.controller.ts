@@ -1,6 +1,14 @@
-import { Controller, Get, Param, BadRequestException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  BadRequestException,
+  Post,
+  Body,
+} from '@nestjs/common';
 import { AppService } from './app.service';
 import isValidAddress from './helpers/isValidAddress';
+import { MintVotingTokensDto } from './polls/dto/mint-voting-tokens.dto';
 
 @Controller()
 export class AppController {
@@ -30,9 +38,13 @@ export class AppController {
     return this.appService.getAccountTokenBalance(accountAddress);
   }
 
-  // register voters for token (mint voting tokens)
-
-  // process mint request from voters
+  // mint voting tokens
+  @Post('request-voting-tokens')
+  async requestVotingTokens(@Body() body: MintVotingTokensDto) {
+    if (!isValidAddress(body.address)) throw new BadRequestException();
+    const isMintSuccess = await this.appService.requestVotingTokens(body);
+    return { result: isMintSuccess };
+  }
 
   // get list of all votes
 }
