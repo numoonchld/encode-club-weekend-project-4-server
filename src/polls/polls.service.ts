@@ -5,8 +5,11 @@ import { Poll, PollDocument } from './schemas/poll.schema';
 import { CreatePollDto } from './dto/create-poll.dto';
 
 type PollTypeLocal = {
-  address: string;
-  lastMintEpoch: number;
+  question: string;
+  proposals: string[];
+  creator: string;
+  isDeployed: boolean;
+  deploymentHash: string;
 };
 
 @Injectable()

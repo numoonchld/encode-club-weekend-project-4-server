@@ -5,15 +5,9 @@ export type PollDocument = Poll & Document;
 
 // schemaType limitations: https://mongoosejs.com/docs/guide.html#definition
 
-class Deployment {
-  address: string;
-  hash: string;
-  admin: string;
-}
-
 @Schema()
 export class Poll {
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   question: string;
 
   @Prop({ required: true })
@@ -26,7 +20,7 @@ export class Poll {
   isDeployed: boolean;
 
   @Prop()
-  deployment: Deployment;
+  deploymentHash: string;
 }
 
 export const PollSchema = SchemaFactory.createForClass(Poll);
