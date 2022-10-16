@@ -6,13 +6,13 @@ export type PollDocument = Poll & Document;
 
 @Schema()
 export class Poll {
-  @Prop()
+  @Prop({ required: true })
   question: string;
 
-  @Prop()
+  @Prop({ required: true })
   proposals: string[];
 
-  @Prop()
+  @Prop({ required: true })
   creator: Wallet;
 
   @Prop()
