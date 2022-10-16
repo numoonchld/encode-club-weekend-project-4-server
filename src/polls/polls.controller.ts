@@ -25,6 +25,4 @@ export class PollsController {
   }
 
   // deploy ballot contract
-
-  // registered voter casts vote
 }

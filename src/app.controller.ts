@@ -46,5 +46,7 @@ export class AppController {
     return { result: isMintSuccess };
   }
 
+  // register vote casted
+
   // get list of all votes
 }
