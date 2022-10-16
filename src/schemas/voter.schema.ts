@@ -7,7 +7,7 @@ export type VoterDocument = Voter & Document;
 
 @Schema()
 export class Voter {
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   address: string;
 
   @Prop({ required: true })
