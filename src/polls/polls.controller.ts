@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Post,
+  Param,
   BadRequestException,
 } from '@nestjs/common';
 import { CreatePollDto } from './dto/create-poll.dto';
@@ -20,9 +21,15 @@ export class PollsController {
 
   @Post('new-poll')
   createNewPoll(@Body() body: CreatePollDto) {
-    if (!isValidAddress(body.creator)) throw new BadRequestException();
+    if (!isValidAddress(body.creator))
+      throw new BadRequestException('Invalid requesting account address!');
     return this.pollsService.create(body);
   }
 
-  // deploy ballot contract
+  // deploy poll ballot contract
+  @Post('deploy-poll-contract/:poll-id')
+  deployPollContract(@Param('poll-id') pollID: string) {
+    const isDeploySuccess = this.pollsService.deployPoll(pollID);
+    return { result: isDeploySuccess };
+  }
 }

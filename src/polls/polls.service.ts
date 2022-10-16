@@ -1,8 +1,13 @@
 import { Model } from 'mongoose';
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Poll, PollDocument } from './schemas/poll.schema';
 import { CreatePollDto } from './dto/create-poll.dto';
+
+type PollTypeLocal = {
+  address: string;
+  lastMintEpoch: number;
+};
 
 @Injectable()
 export class PollsService {
@@ -15,5 +20,17 @@ export class PollsService {
 
   async findAll(): Promise<Poll[]> {
     return this.pollModel.find().exec();
+  }
+
+  async deployPoll(pollID: string): Promise<Boolean> {
+    this.pollModel.findById(
+      pollID,
+      async (error: Error, poll: PollTypeLocal) => {
+        if (error)
+          throw new InternalServerErrorException('Error finding Poll in DB!');
+      },
+    );
+
+    return true;
   }
 }

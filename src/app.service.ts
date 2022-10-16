@@ -63,9 +63,11 @@ export class AppService {
   ): Promise<Boolean> {
     const addressToMintTo = mintVotingTokensDto.address;
 
-    const voterEntry: VoterTypeLocal[] = await this.voterModel.find({
-      address: addressToMintTo,
-    });
+    const voterEntry: VoterTypeLocal[] = await this.voterModel
+      .find({
+        address: addressToMintTo,
+      })
+      .exec();
 
     if (voterEntry.length !== 0) {
       // if voter exists, check isMintingAllowed, if yes mint, else return same voter
@@ -95,8 +97,8 @@ export class AppService {
         lastMintEpoch: currentEpoch(),
       };
 
-      new this.voterModel(voterToCreate);
-
+      const createdVoter = new this.voterModel(voterToCreate);
+      await createdVoter.save();
       return true;
     }
   }
