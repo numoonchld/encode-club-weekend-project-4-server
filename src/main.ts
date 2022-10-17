@@ -5,6 +5,9 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // enable CORS for API calls from Angular
+  app.enableCors();
+
   // configure OpenAPI (Swagger)
   const config = new DocumentBuilder()
     .setTitle('Tokenized Ballot dApp')
