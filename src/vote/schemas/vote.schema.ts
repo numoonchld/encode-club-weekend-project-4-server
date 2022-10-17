@@ -8,13 +8,13 @@ export type VoteDocument = Vote & Document;
 @Schema()
 export class Vote {
   @Prop({ required: true })
-  address: string;
+  voterAddress: string;
 
   @Prop({ required: true })
-  epoch: number;
+  creationEpoch: number;
 
   @Prop({ required: true })
-  question: string;
+  voteForQuestion: string;
 
   @Prop({ required: true })
   selection: string;

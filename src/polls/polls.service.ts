@@ -1,9 +1,5 @@
 import { Model } from 'mongoose';
-import {
-  BadRequestException,
-  Injectable,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Poll, PollDocument } from './schemas/poll.schema';
 import { CreatePollDto } from './dto/create-poll.dto';
@@ -24,7 +20,7 @@ export class PollsService {
 
   // get a single poll by pollID
   async findByID(pollID: string): Promise<any> {
-    return this.pollModel.findById(pollID).exec();
+    return await this.pollModel.findById(pollID).exec();
   }
 
   // deliver all existing polls
