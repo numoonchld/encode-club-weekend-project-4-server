@@ -17,6 +17,6 @@ export class VoteService {
 
   // deliver all existing votes
   async getAllVotes(): Promise<any> {
-    return await this.voteModel.find().exec();
+    return { result: await this.voteModel.find().exec() };
   }
 }
