@@ -21,7 +21,7 @@ export class AppController {
 
   // get token contract address
   @Get('token-contract-address')
-  getTokenContractAddress(): string {
+  getTokenContractAddress() {
     return this.appService.getTokenContractAddress();
   }
 

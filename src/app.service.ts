@@ -43,7 +43,7 @@ export class AppService {
   }
 
   getTokenContractAddress() {
-    return tokenContractAddressJSON['token-goerli-address'];
+    return { result: tokenContractAddressJSON['token-goerli-address'] };
   }
 
   async getTotalSupply() {
