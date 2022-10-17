@@ -2,12 +2,12 @@ FROM node:16.15.1-bullseye-slim
 
 RUN mkdir -p /home/app/ && chown -R node:node /home/app
 WORKDIR /home/app
-COPY --chown=node:node . .
+COPY --chown=node:node . /home/app
 
 USER node
 
-RUN npm ci
+RUN npm install
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["npm", "run", "start"]
