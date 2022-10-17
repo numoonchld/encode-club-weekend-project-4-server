@@ -6,7 +6,8 @@ COPY --chown=node:node . /home/app
 
 USER node
 
-RUN npm install
+RUN npm run install
+RUN npm run build
 
 EXPOSE 3000
 
