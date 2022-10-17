@@ -15,9 +15,10 @@ import deployToGoerli, {
 export class PollsService {
   constructor(@InjectModel(Poll.name) private pollModel: Model<PollDocument>) {}
 
-  async create(createPollDto: CreatePollDto): Promise<Poll> {
+  async create(createPollDto: CreatePollDto): Promise<any> {
     const createdPoll = new this.pollModel(createPollDto);
-    return createdPoll.save();
+    const savedPoll = await createdPoll.save();
+    return { result: savedPoll };
   }
 
   async findAll(): Promise<Poll[]> {
