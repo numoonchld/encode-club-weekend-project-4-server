@@ -1,5 +1,9 @@
 import { Model } from 'mongoose';
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  BadRequestException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
 import { Voter, VoterDocument } from './schemas/voter.schema';
@@ -20,6 +24,7 @@ import mintTokens from './contract-assets/token-contract/mintTokens.helper';
 type VoterTypeLocal = {
   address: string;
   lastMintEpoch: number;
+  save?: () => {};
 };
 
 @Injectable()
@@ -70,19 +75,31 @@ export class AppService {
       .exec();
 
     if (voterEntry.length !== 0) {
-      // if voter exists, check isMintingAllowed, if yes mint, else return same voter
+      // if voter exists, check isMintingAllowed, if yes mint
       const matchedVoter = voterEntry[0];
+
+      if (!isMintingAllowed(matchedVoter.lastMintEpoch))
+        throw new BadRequestException(
+          'Minting refused! (Cooling period active for this account!)',
+        );
+
       if (isMintingAllowed(matchedVoter.lastMintEpoch)) {
         const isMintingSuccess: boolean = await mintTokens(
           matchedVoter.address,
           this.contract,
         );
 
-        if (isMintingSuccess) return true;
-        throw new InternalServerErrorException('Minting failed!');
+        if (isMintingSuccess) {
+          matchedVoter.lastMintEpoch = currentEpoch();
+          await matchedVoter.save();
+          return true;
+        }
+        throw new InternalServerErrorException(
+          'Minting failed! (Debug-Info: voter exists in DB)',
+        );
       }
 
-      return true;
+      return false;
     } else {
       const isMintingSuccess: boolean = await mintTokens(
         addressToMintTo,
@@ -90,7 +107,9 @@ export class AppService {
       );
 
       if (!isMintingSuccess)
-        throw new InternalServerErrorException('Minting failed!');
+        throw new InternalServerErrorException(
+          'Minting failed! (Debug-Info: voter was not in DB)',
+        );
 
       const voterToCreate: VoterTypeLocal = {
         address: addressToMintTo,
