@@ -3,8 +3,8 @@ import {
   Controller,
   Get,
   Post,
-  Param,
   BadRequestException,
+  Param,
 } from '@nestjs/common';
 import { DeployPollDto } from './dto/deploy-poll-dto';
 import { CreatePollDto } from './dto/create-poll.dto';
@@ -15,11 +15,19 @@ import isValidAddress from '../helpers/isValidAddress';
 export class PollsController {
   constructor(private readonly pollsService: PollsService) {}
 
+  // get all polls
   @Get()
   getAll() {
     return this.pollsService.findAll();
   }
 
+  // get a single poll by pollID
+  @Get(':pollID')
+  getPollByID(@Param('pollID') pollID: string) {
+    return this.pollsService.findByID(pollID);
+  }
+
+  // create a new poll
   @Post('new-poll')
   createNewPoll(@Body() body: CreatePollDto) {
     if (!isValidAddress(body.creator))
